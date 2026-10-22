@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { PlanUsageService } from '../plans/plan-usage.service';
 import { TenantDatabase } from '../tenancy/tenant-database';
 import { Project } from './project.entity';
 
@@ -9,14 +10,20 @@ import { Project } from './project.entity';
 // of that same organization through (database filter).
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly tenantDb: TenantDatabase) {}
+  constructor(
+    private readonly tenantDb: TenantDatabase,
+    private readonly planUsage: PlanUsageService,
+  ) {}
 
   // Bound to the current request's tenant transaction.
   private get projects(): Repository<Project> {
     return this.tenantDb.getRepository(Project);
   }
 
-  create(organizationId: string, name: string): Promise<Project> {
+  async create(organizationId: string, name: string): Promise<Project> {
+    // Same tenant transaction as the insert: the plan check holds its lock
+    // until this insert is committed.
+    await this.planUsage.assertCanCreateProject(organizationId);
     return this.projects.save(
       this.projects.create({ organizationId, name: name.trim() }),
     );

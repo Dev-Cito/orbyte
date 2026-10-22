@@ -9,6 +9,7 @@ import { AppRoleCheck } from './database/app-role.check';
 import { typeOrmOptions } from './database/typeorm-options';
 import { MembershipsModule } from './memberships/memberships.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { PlansModule } from './plans/plans.module';
 import { ProjectsModule } from './projects/projects.module';
 import { StripeModule } from './stripe/stripe.module';
 import { TasksModule } from './tasks/tasks.module';
@@ -35,6 +36,7 @@ import { UsersModule } from './users/users.module';
     TasksModule,
     StripeModule,
     BillingModule,
+    PlansModule,
   ],
   providers: [
     AppRoleCheck,
