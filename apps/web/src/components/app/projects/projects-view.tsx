@@ -10,12 +10,14 @@ import { useResource } from "@/lib/use-resource";
 import { LoadError } from "../load-error";
 import { isAtProjectLimit } from "../plan";
 import { PlanLimitNotice } from "../plan-limit-notice";
+import { useSessionPlanSync } from "../use-session-plan-sync";
 import { CreateProjectDialog } from "./create-project-dialog";
 import { ProjectCard } from "./project-card";
 
 export function ProjectsView() {
   const projects = useResource("projects", projectsApi.list);
   const usage = useResource("usage", billingApi.getUsage);
+  useSessionPlanSync(usage);
   const [creating, setCreating] = useState(false);
   const [toDelete, setToDelete] = useState<Project | null>(null);
   const [deleting, setDeleting] = useState(false);

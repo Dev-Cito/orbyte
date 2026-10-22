@@ -12,6 +12,7 @@ import { isAtProjectLimit } from "./plan";
 import { PlanBadge } from "./plan-badge";
 import { PlanLimitNotice } from "./plan-limit-notice";
 import { UsageCard } from "./usage-card";
+import { useSessionPlanSync } from "./use-session-plan-sync";
 
 const RECENT = 5;
 
@@ -19,6 +20,7 @@ export function Dashboard() {
   const { user, organization, plan: sessionPlan } = useAuth();
   const usage = useResource("usage", billingApi.getUsage);
   const projects = useResource("projects", projectsApi.list);
+  useSessionPlanSync(usage);
   // Usage is fetched fresh; the session's plan covers the first paint.
   const plan = usage.status === "success" ? usage.data.plan : sessionPlan;
 

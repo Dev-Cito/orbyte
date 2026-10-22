@@ -2,6 +2,7 @@
 // the API is the only authority on what a user may do.
 
 export type Plan = "free" | "pro" | "business";
+export type PaidPlan = Exclude<Plan, "free">;
 export type Role = "owner" | "admin" | "member";
 
 export interface User {

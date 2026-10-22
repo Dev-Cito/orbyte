@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { BillingPlaceholder } from "@/components/app/billing-placeholder";
+import { BillingView } from "@/components/app/billing/billing-view";
 
 export const metadata: Metadata = { title: "Billing" };
 
 export default function BillingPage() {
-  return <BillingPlaceholder />;
+  return <BillingView />;
 }

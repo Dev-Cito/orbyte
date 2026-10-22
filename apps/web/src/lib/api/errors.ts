@@ -44,6 +44,9 @@ export function toApiError(status: number, body: ApiErrorBody | null): ApiError 
 }
 
 function messageOf(status: number, body: ApiErrorBody | null): string {
+  // Server failures say nothing useful to a user ("Internal server error"),
+  // except our own 502 "service unreachable".
+  if (status >= 500 && status !== 502) return "Something went wrong on our side. Please try again.";
   // Validation errors come as a list of messages.
   if (Array.isArray(body?.message)) return body.message.join(". ");
   if (body?.message) return body.message;
