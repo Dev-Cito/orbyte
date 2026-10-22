@@ -9,14 +9,40 @@ export interface NavItem {
   label: string;
 }
 
-export function SidebarNav({ items }: { items: NavItem[] }) {
-  const pathname = usePathname();
+// Highlights the current section. usePathname() is request data on dynamic
+// routes: render this inside <Suspense>, with <NavList pathname={null} /> as
+// the fallback (same links, nothing marked active yet).
+export function SidebarNav({
+  items,
+  orientation = "vertical",
+}: {
+  items: NavItem[];
+  orientation?: Orientation;
+}) {
+  return <NavList items={items} pathname={usePathname()} orientation={orientation} />;
+}
+
+type Orientation = "vertical" | "horizontal";
+
+// vertical: the sidebar. horizontal: the same links under the top nav on
+// small screens, where the sidebar is hidden.
+export function NavList({
+  items,
+  pathname,
+  orientation = "vertical",
+}: {
+  items: NavItem[];
+  pathname: string | null;
+  orientation?: Orientation;
+}) {
+  const vertical = orientation === "vertical";
   return (
     <nav aria-label="Main">
-      <ul className="flex flex-col gap-1">
+      <ul className={cn("flex gap-1", vertical ? "flex-col" : "overflow-x-auto")}>
         {items.map((item) => {
           const active =
-            item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href);
+            pathname !== null &&
+            (item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href));
           return (
             <li key={item.href}>
               <Link
@@ -34,7 +60,10 @@ export function SidebarNav({ items }: { items: NavItem[] }) {
                 {active && (
                   <span
                     aria-hidden="true"
-                    className="absolute inset-y-2 left-0 w-1 rounded-full bg-accent"
+                    className={cn(
+                      "absolute rounded-full bg-accent",
+                      vertical ? "inset-y-2 left-0 w-1" : "inset-x-3 bottom-0 h-0.5",
+                    )}
                   />
                 )}
                 {item.label}

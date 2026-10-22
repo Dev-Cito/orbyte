@@ -4,7 +4,11 @@ import { SessionGate } from "@/components/auth/session-gate";
 import { AppShell, type NavItem } from "@/components/ui/app-shell";
 import { TopNav } from "@/components/ui/top-nav";
 
-const NAV: NavItem[] = [{ href: "/app", label: "Dashboard" }];
+const NAV: NavItem[] = [
+  { href: "/app", label: "Dashboard" },
+  { href: "/app/projects", label: "Projects" },
+  { href: "/app/billing", label: "Billing" },
+];
 
 // Every /app page renders behind SessionGate: the API must accept the
 // session token (GET /auth/me) first. proxy.ts already sent visitors without

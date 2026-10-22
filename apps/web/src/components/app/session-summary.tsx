@@ -5,8 +5,8 @@ import { useState } from "react";
 import { useAuth } from "@/components/auth/auth-provider";
 import { Button } from "@/components/ui/button";
 import { authApi } from "@/lib/api";
+import { PlanBadge } from "./plan-badge";
 
-const PLAN_LABEL = { free: "Free", pro: "Pro", business: "Business" } as const;
 const ROLE_LABEL = { owner: "Owner", admin: "Admin", member: "Member" } as const;
 
 // Top nav contents: who is signed in, in which organization, on which plan.
@@ -30,10 +30,7 @@ export function SessionSummary() {
     <>
       <div className="flex min-w-0 items-center gap-3">
         <span className="truncate text-sm font-semibold">{organization.name}</span>
-        {/* The plan is spelled out, not just colored. */}
-        <span className="rounded-full border border-white/15 px-2 py-0.5 text-xs text-fg-inverse/80">
-          {PLAN_LABEL[plan]} plan
-        </span>
+        <PlanBadge plan={plan} />
       </div>
       <div className="flex items-center gap-3">
         <span className="hidden text-right text-xs leading-tight sm:block">

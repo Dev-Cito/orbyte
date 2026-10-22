@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
-import { SidebarNav, type NavItem } from "./sidebar-nav";
+import { NavList, SidebarNav, type NavItem } from "./sidebar-nav";
 
 export type { NavItem };
 
@@ -28,10 +28,17 @@ export function AppShell({
           <span aria-hidden="true" className="size-6 rounded-lg bg-accent" />
           Orbyte
         </Link>
-        <SidebarNav items={nav} />
+        <Suspense fallback={<NavList items={nav} pathname={null} />}>
+          <SidebarNav items={nav} />
+        </Suspense>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         {topNav}
+        <div className="px-4 pt-3 md:hidden">
+          <Suspense fallback={<NavList items={nav} pathname={null} orientation="horizontal" />}>
+            <SidebarNav items={nav} orientation="horizontal" />
+          </Suspense>
+        </div>
         <main id="main" className="flex-1 px-6 py-8">
           {children}
         </main>

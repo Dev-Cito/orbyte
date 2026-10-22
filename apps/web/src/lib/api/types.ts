@@ -38,6 +38,34 @@ export interface RegisterInput {
   organizationName: string;
 }
 
+export interface Project {
+  id: string;
+  organizationId: string;
+  name: string;
+  createdAt: string;
+}
+
+export const TASK_STATUSES = ["todo", "in_progress", "done"] as const;
+export type TaskStatus = (typeof TASK_STATUSES)[number];
+
+export interface Task {
+  id: string;
+  projectId: string;
+  organizationId: string;
+  title: string;
+  status: TaskStatus;
+  position: number;
+  createdAt: string;
+}
+
+// GET /billing/usage. Informational: the API enforces the limits itself.
+export interface Usage {
+  plan: Plan;
+  usage: { projects: number };
+  // null: unlimited.
+  limits: { maxProjects: number | null };
+}
+
 // Error body of the API (Nest's default shape, plus the plan-limit fields).
 export interface ApiErrorBody {
   statusCode?: number;
