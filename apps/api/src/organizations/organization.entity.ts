@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   type Relation,
@@ -28,7 +29,9 @@ export class Organization {
   })
   plan: Plan;
 
-  // Billing fields, filled in once Stripe is wired up.
+  // One Stripe Customer per organization, and webhooks find the organization
+  // by it when a subscription has no organizationId metadata.
+  @Index('UQ_organization_stripe_customer', { unique: true })
   @Column({ type: 'varchar', nullable: true })
   stripeCustomerId: string | null;
 

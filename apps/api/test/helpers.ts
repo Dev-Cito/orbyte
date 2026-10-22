@@ -7,7 +7,9 @@ import { DataSource, In } from 'typeorm';
 import { AppModule } from './../src/app.module';
 import ownerDataSource from './../src/database/data-source';
 import { Organization } from './../src/organizations/organization.entity';
+import { STRIPE_CLIENT } from './../src/stripe/stripe.module';
 import { User } from './../src/users/user.entity';
+import { FakeStripe } from './fake-stripe';
 
 export interface Tenant {
   userId: string;
@@ -23,12 +25,19 @@ interface AuthBody {
   organization: { id: string };
 }
 
-// Boots the full app (global ValidationPipe included, it lives in AppModule).
-export async function startApp(): Promise<INestApplication> {
+// Boots the full app (global ValidationPipe included, it lives in AppModule),
+// with the same rawBody option as main.ts. Stripe is always faked: no test
+// can reach the real API. Pass a FakeStripe to drive and inspect it.
+export async function startApp(
+  stripe: FakeStripe = new FakeStripe(),
+): Promise<INestApplication> {
   const moduleRef = await Test.createTestingModule({
     imports: [AppModule],
-  }).compile();
-  const app = moduleRef.createNestApplication();
+  })
+    .overrideProvider(STRIPE_CLIENT)
+    .useValue(stripe)
+    .compile();
+  const app = moduleRef.createNestApplication({ rawBody: true });
   await app.init();
   return app;
 }

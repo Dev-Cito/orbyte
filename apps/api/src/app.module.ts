@@ -4,11 +4,13 @@ import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClsModule } from 'nestjs-cls';
 import { AuthModule } from './auth/auth.module';
+import { BillingModule } from './billing/billing.module';
 import { AppRoleCheck } from './database/app-role.check';
 import { typeOrmOptions } from './database/typeorm-options';
 import { MembershipsModule } from './memberships/memberships.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { ProjectsModule } from './projects/projects.module';
+import { StripeModule } from './stripe/stripe.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 
@@ -31,6 +33,8 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     ProjectsModule,
     TasksModule,
+    StripeModule,
+    BillingModule,
   ],
   providers: [
     AppRoleCheck,
