@@ -1,0 +1,6 @@
+packages:
+  - "apps/*"
+allowBuilds:
+  unrs-resolver: true
+  argon2: true
+  "@parcel/watcher": false
