@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import type { PaidPlan } from "@/lib/api";
-import type { PlanOffer } from "./plans";
+import type { PlanOffer } from "@/lib/plan-offers";
 
 export type PlanCardAction =
   | { kind: "current" }

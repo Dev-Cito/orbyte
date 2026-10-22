@@ -1,7 +1,9 @@
 import type { Plan } from "@/lib/api";
 
-// Display copy for the plan grid. Marketing text only: Stripe holds the real
-// prices, and the API enforces what each plan allows.
+// Display copy for the plans, shared by the public /pricing page and the
+// in-app billing page so both always show the same plans and limits.
+// Marketing text only: Stripe holds the real prices, and the API enforces
+// what each plan allows.
 export interface PlanOffer {
   plan: Plan;
   name: string;

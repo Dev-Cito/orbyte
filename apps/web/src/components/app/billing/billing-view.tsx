@@ -10,7 +10,7 @@ import { PlanBadge } from "../plan-badge";
 import { UsageCard } from "../usage-card";
 import { useSessionPlanSync } from "../use-session-plan-sync";
 import { PlanCard, type PlanCardAction } from "./plan-card";
-import { PLAN_OFFERS, PLAN_RANK } from "./plans";
+import { PLAN_OFFERS, PLAN_RANK } from "@/lib/plan-offers";
 
 export function BillingView() {
   const { role, plan: sessionPlan } = useAuth();
