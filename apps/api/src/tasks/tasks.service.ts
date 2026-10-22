@@ -1,19 +1,25 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProjectsService } from '../projects/projects.service';
+import { TenantDatabase } from '../tenancy/tenant-database';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './task.entity';
 
-// Same rule as projects: every query is scoped with the organizationId of the
-// verified token, and anything outside it is a 404.
+// Same rules as projects: every query is scoped with the organizationId of the
+// verified token (anything outside it is a 404) and runs in the request's
+// tenant transaction, under Row-Level Security.
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectRepository(Task) private readonly tasks: Repository<Task>,
+    private readonly tenantDb: TenantDatabase,
     private readonly projectsService: ProjectsService,
   ) {}
+
+  // Bound to the current request's tenant transaction.
+  private get tasks(): Repository<Task> {
+    return this.tenantDb.getRepository(Task);
+  }
 
   async create(
     organizationId: string,

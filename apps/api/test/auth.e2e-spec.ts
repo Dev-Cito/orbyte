@@ -12,6 +12,7 @@ import {
   api,
   bearer,
   cleanup,
+  ownerDb,
   registerTenant,
   startApp,
   Tenant,
@@ -24,12 +25,13 @@ describe('Auth (e2e)', () => {
 
   beforeAll(async () => {
     app = await startApp();
-    dataSource = app.get(DataSource);
+    dataSource = await ownerDb();
     alice = await registerTenant(app, 'alice');
   });
 
   afterAll(async () => {
-    await cleanup(app, [alice]);
+    await cleanup([alice]);
+    await dataSource.destroy();
     await app.close();
   });
 

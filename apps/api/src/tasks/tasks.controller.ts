@@ -9,18 +9,17 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import type { AuthContext } from '../auth/auth-context';
 import { CurrentAuth } from '../auth/current-auth.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { TenantRoute } from '../tenancy/tenant-route.decorator';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './task.entity';
 import { TasksService } from './tasks.service';
 
 @Controller()
-@UseGuards(JwtAuthGuard)
+@TenantRoute()
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 

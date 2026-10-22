@@ -1,16 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TenantDatabase } from '../tenancy/tenant-database';
 import { Project } from './project.entity';
 
-// Tenant isolation is applicative for now: every query is scoped with
-// organizationId, which callers take from the verified token. Row-Level
-// Security will back this up at the database level.
+// Two layers of tenant isolation. Every query is still scoped with the
+// organizationId of the verified token (application filter), and runs in the
+// request's tenant transaction, where Row-Level Security only lets the rows
+// of that same organization through (database filter).
 @Injectable()
 export class ProjectsService {
-  constructor(
-    @InjectRepository(Project) private readonly projects: Repository<Project>,
-  ) {}
+  constructor(private readonly tenantDb: TenantDatabase) {}
+
+  // Bound to the current request's tenant transaction.
+  private get projects(): Repository<Project> {
+    return this.tenantDb.getRepository(Project);
+  }
 
   create(organizationId: string, name: string): Promise<Project> {
     return this.projects.save(

@@ -5,6 +5,7 @@ import type { Server } from 'node:http';
 import request from 'supertest';
 import { DataSource, In } from 'typeorm';
 import { AppModule } from './../src/app.module';
+import ownerDataSource from './../src/database/data-source';
 import { Organization } from './../src/organizations/organization.entity';
 import { User } from './../src/users/user.entity';
 
@@ -68,9 +69,18 @@ export async function registerTenant(
   };
 }
 
+// The owner connection (DATABASE_MIGRATION_URL), for setup checks and
+// cleanup. Assertions on what is really stored must not go through the app
+// role: without a tenant context, RLS shows it no rows at all, so a
+// "count is 0" check would pass for the wrong reason.
+export async function ownerDb(): Promise<DataSource> {
+  if (!ownerDataSource.isInitialized) await ownerDataSource.initialize();
+  return ownerDataSource;
+}
+
 // Deleting the organizations cascades to memberships, projects and tasks.
-export async function cleanup(app: INestApplication, tenants: Tenant[]) {
-  const dataSource = app.get(DataSource);
+export async function cleanup(tenants: Tenant[]) {
+  const dataSource = await ownerDb();
   const present = tenants.filter(Boolean);
   if (!present.length) return;
   await dataSource

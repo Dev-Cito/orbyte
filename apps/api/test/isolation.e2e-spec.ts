@@ -7,6 +7,7 @@ import {
   api,
   bearer,
   cleanup,
+  ownerDb,
   registerTenant,
   startApp,
   Tenant,
@@ -49,7 +50,7 @@ describe('Tenant isolation (e2e)', () => {
 
   beforeAll(async () => {
     app = await startApp();
-    dataSource = app.get(DataSource);
+    dataSource = await ownerDb();
     a = await registerTenant(app, 'org-a');
     b = await registerTenant(app, 'org-b');
     projectA = await createProject(a, 'A project 1');
@@ -66,7 +67,8 @@ describe('Tenant isolation (e2e)', () => {
   });
 
   afterAll(async () => {
-    await cleanup(app, [a, b]);
+    await cleanup([a, b]);
+    await dataSource.destroy();
     await app.close();
   });
 

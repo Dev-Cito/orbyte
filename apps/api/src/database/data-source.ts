@@ -3,14 +3,13 @@ import { join } from 'node:path';
 import { DataSource } from 'typeorm';
 import { typeOrmOptions } from './typeorm-options';
 
-// Entry point for the TypeORM CLI (migration:generate / run / revert) and the
-// e2e global setup. The Nest app does not use it: it goes through AppModule.
+// Owner connection (DATABASE_MIGRATION_URL), for the TypeORM CLI
+// (migration:generate / run / revert), the seed, db:app-login and the e2e
+// setup. The Nest app never uses it: it connects as orbyte_app via AppModule.
 if (existsSync('.env')) process.loadEnvFile('.env');
 
 export default new DataSource({
-  ...typeOrmOptions((key) => process.env[key]),
-  // The CLI must never touch the schema on its own.
-  synchronize: false,
+  ...typeOrmOptions((key) => process.env[key], 'DATABASE_MIGRATION_URL'),
   entities: [join(__dirname, '..', '**', '*.entity.{ts,js}')],
   migrations: [join(__dirname, '..', 'migrations', '*.{ts,js}')],
 });

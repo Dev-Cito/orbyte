@@ -2,7 +2,9 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClsModule } from 'nestjs-cls';
 import { AuthModule } from './auth/auth.module';
+import { AppRoleCheck } from './database/app-role.check';
 import { typeOrmOptions } from './database/typeorm-options';
 import { MembershipsModule } from './memberships/memberships.module';
 import { OrganizationsModule } from './organizations/organizations.module';
@@ -13,10 +15,13 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    // One CLS context per HTTP request, opened by a middleware on every route.
+    ClsModule.forRoot({ global: true, middleware: { mount: true } }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        ...typeOrmOptions((key) => config.get<string>(key)),
+        // The app role: subject to Row-Level Security.
+        ...typeOrmOptions((key) => config.get<string>(key), 'DATABASE_URL'),
         autoLoadEntities: true,
       }),
     }),
@@ -28,6 +33,7 @@ import { UsersModule } from './users/users.module';
     TasksModule,
   ],
   providers: [
+    AppRoleCheck,
     // Registered here rather than in main.ts so e2e tests get it too.
     {
       provide: APP_PIPE,

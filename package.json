@@ -7,6 +7,7 @@
     "seed": "pnpm --filter api seed",
     "migration:run": "pnpm --filter api migration:run",
     "migration:generate": "pnpm --filter api migration:generate",
+    "db:app-login": "pnpm --filter api db:app-login",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "build": "pnpm -r build",

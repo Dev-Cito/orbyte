@@ -1,7 +1,5 @@
-import { NestFactory } from '@nestjs/core';
-import { DataSource } from 'typeorm';
-import { AppModule } from './app.module';
 import { hashPassword } from './auth/password';
+import dataSource from './database/data-source';
 import { Membership } from './memberships/membership.entity';
 import { Organization } from './organizations/organization.entity';
 import { Project } from './projects/project.entity';
@@ -64,10 +62,11 @@ const ORGS: {
 ];
 
 async function seed() {
-  const app = await NestFactory.createApplicationContext(AppModule, {
-    logger: ['error', 'warn'],
-  });
-  const dataSource = app.get(DataSource);
+  // As the owner (DATABASE_MIGRATION_URL): TRUNCATE needs it, and the app
+  // role could only write inside one tenant per transaction. Local Docker's
+  // owner is a superuser, which Row-Level Security does not apply to; seeding
+  // as a non-superuser owner would be refused by FORCE ROW LEVEL SECURITY.
+  await dataSource.initialize();
 
   // Start from a clean slate so the seed can be re-run.
   await dataSource.query(
@@ -116,7 +115,7 @@ async function seed() {
   });
 
   console.log(`Seeded. Password for every user: ${SEED_PASSWORD}`);
-  await app.close();
+  await dataSource.destroy();
 }
 
 seed().catch((err) => {

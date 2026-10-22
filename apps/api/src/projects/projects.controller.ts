@@ -8,17 +8,16 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import type { AuthContext } from '../auth/auth-context';
 import { CurrentAuth } from '../auth/current-auth.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { TenantRoute } from '../tenancy/tenant-route.decorator';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { Project } from './project.entity';
 import { ProjectsService } from './projects.service';
 
 @Controller('projects')
-@UseGuards(JwtAuthGuard)
+@TenantRoute()
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 

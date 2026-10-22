@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../auth/auth.module';
+import { TenancyModule } from '../tenancy/tenancy.module';
 import { Project } from './project.entity';
 import { ProjectsController } from './projects.controller';
 import { ProjectsService } from './projects.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Project]), AuthModule],
+  // forFeature only registers the entity: repositories come from
+  // TenantDatabase, bound to the request's tenant transaction.
+  imports: [TypeOrmModule.forFeature([Project]), AuthModule, TenancyModule],
   controllers: [ProjectsController],
   providers: [ProjectsService],
   exports: [ProjectsService],

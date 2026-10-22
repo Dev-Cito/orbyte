@@ -4,11 +4,21 @@ import { RedactedSqlLogger } from './redacted-sql.logger';
 type PostgresOptions = Extract<DataSourceOptions, { type: 'postgres' }>;
 type EnvReader = (key: string) => string | undefined;
 
-// Shared by the Nest app (via ConfigService) and the TypeORM CLI data source
-// (via process.env), so both connect with exactly the same settings.
-export function typeOrmOptions(env: EnvReader): PostgresOptions {
-  const url = env('DATABASE_URL');
-  if (!url) throw new Error('DATABASE_URL is required');
+// Two connections, two roles:
+// - DATABASE_URL: the Nest app at runtime, as orbyte_app (no superuser, no
+//   BYPASSRLS, not the owner), so Row-Level Security applies to it.
+// - DATABASE_MIGRATION_URL: the TypeORM CLI, the seed and test assertions,
+//   as the role that owns the tables.
+export type DatabaseUrlKey = 'DATABASE_URL' | 'DATABASE_MIGRATION_URL';
+
+// Shared by the Nest app (via ConfigService) and the owner data source (via
+// process.env), so both connect with the same settings except the role.
+export function typeOrmOptions(
+  env: EnvReader,
+  urlKey: DatabaseUrlKey,
+): PostgresOptions {
+  const url = env(urlKey);
+  if (!url) throw new Error(`${urlKey} is required`);
   const isProduction = env('NODE_ENV') === 'production';
 
   return {
@@ -19,9 +29,9 @@ export function typeOrmOptions(env: EnvReader): PostgresOptions {
     // must not try to install one on connect.
     uuidExtension: 'pgcrypto',
     installExtensions: false,
-    // Opt-in for local dev only; production never auto-syncs the schema,
-    // even if the variable is set by mistake. Migrations are the default.
-    synchronize: !isProduction && env('DATABASE_SYNCHRONIZE') === 'true',
+    // Never: roles, grants and RLS policies only exist in migrations, which
+    // synchronize knows nothing about. The app role has no DDL rights anyway.
+    synchronize: false,
     // Verbose in dev so every query (and its tenant filter) is visible.
     // Parameters are never logged: they can hold hashes and emails.
     logger: new RedactedSqlLogger(
