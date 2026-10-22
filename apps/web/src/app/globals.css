@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Graphite & Lime — design tokens
+   ============================================================
+   Usage rules:
+   - The app shell (sidebar, background) is SOLID graphite.
+   - Glass is only for floating elements (top nav, modals, panels).
+   - Lime only marks actions: primary CTA, active nav indicator.
+   - Status is never conveyed by color alone (always text or an icon too).
+*/
+
+/* Tokens whose names fall in Tailwind's theme namespaces (--color-*,
+   --radius-*) are declared here: Tailwind emits them on :root with these
+   exact names AND generates utilities from them (bg-brand, bg-background,
+   bg-accent, rounded-card, rounded-panel). "static" emits them even when no
+   utility uses them, so they are always available as var(). */
+@theme static {
+  /* Brand */
+  --color-brand: #111827;
+  --color-background: #f9fafb;
+  --color-accent: #a3e635;
+
+  /* Shape */
+  --radius-card: 16px;
+  --radius-panel: 20px;
+}
+
+:root {
+  /* Text on light surfaces */
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --text-disabled: #9ca3af;
+
+  /* Text on dark surfaces */
+  --text-inverse: #f9fafb;
+  /* Text on a solid lime fill (primary button) */
+  --text-accent-on-lime: #1f2937;
+  /* Lime-colored text on a light lime tint (badges): never white on lime */
+  --text-lime-on-tint: #3f6212;
+
+  /* Light surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #f3f4f6;
+  --border-default: #e5e7eb;
+
+  /* Dark surfaces */
+  --surface-dark: #111827;
+  --surface-dark-raised: #1f2937;
+
+  /* Glass (floating elements over graphite only) */
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-bg-hover: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-blur: 16px;
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+
+  /* Motion */
+  --transition-ui: 180ms ease;
+
+  /* Accessibility */
+  --focus-ring: #65a30d;
+  --danger: #b91c1c;
+  --danger-tint: #fef2f2;
+}
+
+/* Non-namespaced tokens, exposed to Tailwind under color utilities:
+   text-fg, text-fg-secondary, bg-surface, border-border, bg-surface-dark...
+   "inline" makes utilities reference the :root variables above. */
+@theme inline {
+  --color-fg: var(--text-primary);
+  --color-fg-secondary: var(--text-secondary);
+  --color-fg-muted: var(--text-muted);
+  --color-fg-disabled: var(--text-disabled);
+  --color-fg-inverse: var(--text-inverse);
+  --color-fg-on-lime: var(--text-accent-on-lime);
+  --color-fg-lime: var(--text-lime-on-tint);
+
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-border: var(--border-default);
+  --color-surface-dark: var(--surface-dark);
+  --color-surface-dark-raised: var(--surface-dark-raised);
+
+  --color-danger: var(--danger);
+  --color-danger-tint: var(--danger-tint);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+/* Visible, consistent keyboard focus everywhere. */
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* Floating glass surface. Only over graphite: on a light background the
+   6% white would be invisible. */
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  transition:
+    background-color var(--transition-ui),
+    backdrop-filter var(--transition-ui);
+}
+
+.glass-panel:hover {
+  background: var(--glass-bg-hover);
+}
+
+/* No backdrop-filter: a translucent panel would just be unreadable over
+   busy content, so fall back to an opaque raised graphite. */
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .glass-panel,
+  .glass-panel:hover {
+    background: var(--surface-dark-raised);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-panel {
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

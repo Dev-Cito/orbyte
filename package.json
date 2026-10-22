@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev:api": "pnpm --filter api start:dev",
+    "dev:web": "pnpm --filter web dev",
     "seed": "pnpm --filter api seed",
     "migration:run": "pnpm --filter api migration:run",
     "migration:generate": "pnpm --filter api migration:generate",
