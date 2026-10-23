@@ -15,14 +15,16 @@ const sizes: Record<Size, string> = {
   sm: "h-8 rounded-lg px-2.5 text-xs",
 };
 
-// Lime is reserved for the primary action: one per view, ideally.
+// Lime is reserved for the primary action: one per view, ideally. On light
+// surfaces its edge is drawn in --accent-strong: vivid lime alone is 1.5:1
+// against white, too faint to outline a control.
 const variants: Record<Variant, Record<Tone, string>> = {
   primary: {
-    light: "bg-accent text-fg-on-lime hover:bg-[#bef264]",
-    dark: "bg-accent text-fg-on-lime hover:bg-[#bef264]",
+    light: "bg-accent text-fg-on-lime border border-accent-strong hover:bg-accent-hover",
+    dark: "bg-accent text-fg-on-lime hover:bg-accent-hover",
   },
   secondary: {
-    light: "bg-surface text-fg border border-border hover:bg-surface-subtle",
+    light: "bg-surface text-fg border border-border shadow-subtle hover:bg-surface-subtle",
     dark: "bg-surface-dark-raised text-fg-inverse border border-white/10 hover:bg-white/10",
   },
   ghost: {
@@ -31,8 +33,8 @@ const variants: Record<Variant, Record<Tone, string>> = {
   },
   // Destructive confirmations only.
   danger: {
-    light: "bg-danger text-white hover:bg-[#991b1b]",
-    dark: "bg-[#dc2626] text-white hover:bg-[#b91c1c]",
+    light: "bg-danger text-white hover:bg-danger-hover",
+    dark: "bg-danger text-white hover:bg-danger-hover",
   },
 };
 

@@ -72,16 +72,16 @@ export function CreateProjectDialog({
             {limitError.message}
           </PlanLimitNotice>
           <div className="flex justify-end">
-            <Button variant="secondary" tone="dark" onClick={close}>
+            <Button variant="secondary" onClick={close}>
               Close
             </Button>
           </div>
         </div>
       ) : (
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          {error && <ErrorAlert tone="dark">{error}</ErrorAlert>}
+          {error && <ErrorAlert>{error}</ErrorAlert>}
           <Input
-            tone="dark"
+           
             label="Project name"
             name="name"
             required
@@ -90,10 +90,10 @@ export function CreateProjectDialog({
             autoComplete="off"
           />
           <div className="flex justify-end gap-3">
-            <Button variant="secondary" tone="dark" onClick={close} disabled={pending}>
+            <Button variant="secondary" onClick={close} disabled={pending}>
               Cancel
             </Button>
-            <Button type="submit" tone="dark" loading={pending}>
+            <Button type="submit" loading={pending}>
               Create project
             </Button>
           </div>

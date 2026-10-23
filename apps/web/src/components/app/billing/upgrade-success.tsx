@@ -66,17 +66,17 @@ export function UpgradeSuccess() {
   }
 
   return (
-    <div className="mx-auto flex max-w-lg flex-col items-center gap-4 rounded-panel border border-white/10 bg-surface-dark-raised px-6 py-12 text-center">
+    <div className="mx-auto flex max-w-lg flex-col items-center gap-4 rounded-panel border border-border bg-surface px-6 py-12 text-center">
       {/* Announces each state change to screen readers. */}
       <div role="status" aria-live="polite" className="flex flex-col items-center gap-3">
         {state.status === "waiting" && (
           <>
             <span
               aria-hidden="true"
-              className="size-8 animate-spin rounded-full border-2 border-fg-inverse/20 border-t-fg-inverse"
+              className="size-8 animate-spin rounded-full border-2 border-border border-t-brand"
             />
             <h1 className="text-xl font-semibold">Finalizing your upgrade…</h1>
-            <p className="text-sm text-fg-inverse/70">
+            <p className="text-sm text-fg-secondary">
               Confirming your subscription with Stripe. This usually takes a few seconds.
             </p>
           </>
@@ -86,7 +86,7 @@ export function UpgradeSuccess() {
             <h1 className="text-xl font-semibold">
               You&apos;re now on the {PLAN_LABEL[state.plan]} <span aria-hidden="true">🎉</span>
             </h1>
-            <p className="text-sm text-fg-inverse/70">
+            <p className="text-sm text-fg-secondary">
               Unlimited projects are unlocked for your whole organization.
             </p>
           </>
@@ -94,7 +94,7 @@ export function UpgradeSuccess() {
         {state.status === "slow" && (
           <>
             <h1 className="text-xl font-semibold">Your payment went through</h1>
-            <p className="text-sm text-fg-inverse/70">
+            <p className="text-sm text-fg-secondary">
               Your plan will update shortly — refresh in a moment. There is no need to pay again.
             </p>
           </>
@@ -103,20 +103,20 @@ export function UpgradeSuccess() {
 
       {state.status === "upgraded" && (
         <div className="mt-2 flex flex-wrap justify-center gap-3">
-          <Link href="/app" className={buttonClasses({ tone: "dark" })}>
+          <Link href="/app" className={buttonClasses()}>
             Go to dashboard
           </Link>
-          <Link href="/app/projects" className={buttonClasses({ variant: "secondary", tone: "dark" })}>
+          <Link href="/app/projects" className={buttonClasses({ variant: "secondary" })}>
             View projects
           </Link>
         </div>
       )}
       {state.status === "slow" && (
         <div className="mt-2 flex flex-wrap justify-center gap-3">
-          <Button variant="secondary" tone="dark" onClick={checkAgain}>
+          <Button variant="secondary" onClick={checkAgain}>
             Check again
           </Button>
-          <Link href="/app" className={buttonClasses({ variant: "ghost", tone: "dark" })}>
+          <Link href="/app" className={buttonClasses({ variant: "ghost" })}>
             Go to dashboard
           </Link>
         </div>

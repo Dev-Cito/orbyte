@@ -3,7 +3,6 @@ import { CtaBand } from "@/components/marketing/cta-band";
 import { Features } from "@/components/marketing/features";
 import { Hero } from "@/components/marketing/hero";
 import { PricingPreview } from "@/components/marketing/pricing-preview";
-import { ProductPreview } from "@/components/marketing/product-preview";
 
 export const metadata: Metadata = {
   title: { absolute: "Orbyte — Project management for teams that ship" },
@@ -15,7 +14,6 @@ export default function LandingPage() {
   return (
     <>
       <Hero />
-      <ProductPreview />
       <Features />
       <PricingPreview />
       <CtaBand />

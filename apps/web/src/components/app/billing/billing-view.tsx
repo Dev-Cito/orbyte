@@ -55,7 +55,7 @@ export function BillingView() {
       <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Billing</h1>
-          <p className="mt-1 text-sm text-fg-inverse/60">Your plan and what it includes.</p>
+          <p className="mt-1 text-sm text-fg-muted">Your plan and what it includes.</p>
         </div>
         <PlanBadge plan={currentPlan} />
       </header>
@@ -76,19 +76,19 @@ export function BillingView() {
         {!canManage && (
           <p
             role="note"
-            className="rounded-xl border border-white/10 bg-surface-dark-raised px-4 py-3 text-sm text-fg-inverse/80"
+            className="rounded-xl border border-border bg-surface px-4 py-3 text-sm text-fg-secondary"
           >
             Only owners and admins can manage billing. Ask an owner of your organization to
             upgrade.
           </p>
         )}
-        {error && <ErrorAlert tone="dark">{error}</ErrorAlert>}
+        {error && <ErrorAlert>{error}</ErrorAlert>}
         <div className="grid gap-4 md:grid-cols-3">
           {PLAN_OFFERS.map((offer) => (
             <PlanCard key={offer.plan} offer={offer} action={actionFor(offer.plan)} />
           ))}
         </div>
-        <p className="text-xs text-fg-inverse/50">
+        <p className="text-xs text-fg-muted">
           Payments are handled by Stripe. Prices in USD, billed monthly.
         </p>
       </section>

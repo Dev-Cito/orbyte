@@ -13,8 +13,8 @@ import { isAtProjectLimit } from "./plan";
 // the bar only illustrates them.
 export function UsageCard({ usage }: { usage: Resource<Usage> & { reload: () => void } }) {
   return (
-    <Card tone="dark" className="flex flex-col gap-4">
-      <h2 className="text-sm font-semibold text-fg-inverse/70">Projects</h2>
+    <Card className="flex flex-col gap-4">
+      <h2 className="text-sm font-semibold text-fg-secondary">Projects</h2>
       {usage.status === "loading" && (
         <div role="status" aria-label="Loading usage" className="flex flex-col gap-3">
           <Skeleton className="h-7 w-32" />
@@ -35,7 +35,7 @@ function UsageFigures({ usage }: { usage: Usage }) {
   if (max === null) {
     return (
       <p className="text-2xl font-semibold">
-        {used} {unit} <span className="text-base font-normal text-fg-inverse/60">· Unlimited</span>
+        {used} {unit} <span className="text-base font-normal text-fg-muted">· Unlimited</span>
       </p>
     );
   }
@@ -45,16 +45,16 @@ function UsageFigures({ usage }: { usage: Usage }) {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-2xl font-semibold">
-        {used} / {max} <span className="text-base font-normal text-fg-inverse/60">projects</span>
+        {used} / {max} <span className="text-base font-normal text-fg-muted">projects</span>
       </p>
       <ProgressBar value={used} max={max} label="Projects used" emphasis={atLimit} />
-      <p className="text-sm text-fg-inverse/70">
+      <p className="text-sm text-fg-secondary">
         {used > max
           ? `Over the limit of your plan by ${used - max}. Existing projects are kept.`
           : atLimit
             ? "Limit reached."
             : `${remaining} remaining on your plan.`}{" "}
-        <Link href="/app/projects" className="font-medium text-fg-inverse underline underline-offset-4">
+        <Link href="/app/projects" className="font-medium text-fg underline underline-offset-4">
           View projects
         </Link>
       </p>

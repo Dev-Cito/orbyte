@@ -38,34 +38,38 @@ export function NavList({
   const vertical = orientation === "vertical";
   return (
     <nav aria-label="Main">
-      <ul className={cn("flex gap-1", vertical ? "flex-col" : "overflow-x-auto")}>
+      <ul className={cn("flex gap-0.5", vertical ? "flex-col" : "gap-1 overflow-x-auto")}>
         {items.map((item) => {
           const active =
             pathname !== null &&
             (item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href));
           return (
-            <li key={item.href}>
+            <li key={item.href} className="relative">
+              {/* Active: a lime bar AND bolder text AND aria-current, never
+                  color alone. The bar is lime-600 on the white sidebar
+                  (3.1:1); vivid lime would be 1.5:1 there. */}
+              {active && (
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute bg-accent-strong",
+                    vertical
+                      ? "-left-3 inset-y-1.5 w-[3px] rounded-r-full"
+                      : "inset-x-3 bottom-0 h-0.5 rounded-t-full",
+                  )}
+                />
+              )}
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative flex h-10 items-center rounded-lg px-3 text-sm transition-colors duration-[180ms]",
+                  "flex items-center rounded-lg px-3 text-sm transition-colors duration-[180ms]",
+                  vertical ? "h-9" : "h-11 whitespace-nowrap",
                   active
-                    ? "bg-white/5 font-semibold text-fg-inverse"
-                    : "text-fg-inverse/70 hover:bg-white/5 hover:text-fg-inverse",
+                    ? cn("font-semibold text-fg", vertical && "bg-surface-subtle")
+                    : "text-fg-secondary hover:bg-surface-subtle hover:text-fg",
                 )}
               >
-                {/* Lime marks the active item, along with weight and
-                    aria-current: never color alone. */}
-                {active && (
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "absolute rounded-full bg-accent",
-                      vertical ? "inset-y-2 left-0 w-1" : "inset-x-3 bottom-0 h-0.5",
-                    )}
-                  />
-                )}
                 {item.label}
               </Link>
             </li>

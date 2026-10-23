@@ -23,20 +23,20 @@ export function PlanLimitNotice({
     <div
       role={role}
       className={cn(
-        "flex flex-col gap-3 rounded-card border border-[#fbbf24]/30 bg-surface-dark-raised p-4 sm:flex-row sm:items-center sm:justify-between",
+        "flex flex-col gap-3 rounded-card border border-accent-tint-border bg-accent-tint p-4 sm:flex-row sm:items-center sm:justify-between",
         className,
       )}
     >
       <div className="flex gap-3">
-        <span aria-hidden="true" className="mt-0.5 font-bold text-[#fbbf24]">
+        <span aria-hidden="true" className="mt-0.5 font-bold text-fg-lime">
           !
         </span>
         <div>
-          <p className="text-sm font-semibold text-fg-inverse">{title}</p>
-          <p className="mt-0.5 text-sm text-fg-inverse/70">{children}</p>
+          <p className="text-sm font-semibold text-fg">{title}</p>
+          <p className="mt-0.5 text-sm text-fg-secondary">{children}</p>
         </div>
       </div>
-      <Link href={UPGRADE_HREF} className={buttonClasses({ tone: "dark", className: "shrink-0" })}>
+      <Link href={UPGRADE_HREF} className={buttonClasses({ className: "shrink-0" })}>
         Upgrade
       </Link>
     </div>

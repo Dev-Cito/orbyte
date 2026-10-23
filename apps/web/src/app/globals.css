@@ -4,9 +4,16 @@
    Graphite & Lime — design tokens
    ============================================================
    Usage rules:
-   - The app shell (sidebar, background) is SOLID graphite.
-   - Glass is only for floating elements (top nav, modals, panels).
-   - Lime only marks actions: primary CTA, active nav indicator.
+   - The app (/app) and the marketing pages are LIGHT: white surfaces on a
+     barely tinted canvas, thin 1px borders rather than shadows. Graphite
+     (surface-dark) is kept for the marketing bands that frame the product.
+   - Glass is only for floating elements (modals, top bar): .glass-surface on
+     light backgrounds, .glass-panel over graphite.
+   - Lime only marks actions: primary CTA, active nav indicator. On light
+     surfaces the vivid lime (#A3E635, 1.5:1 against white) never carries
+     information alone: buttons get an --accent-strong border, indicators
+     use --accent-strong (#65A30D, 3.1:1), and lime-colored text uses
+     --text-lime-on-tint (#3F6212, 7.1:1).
    - Status is never conveyed by color alone (always text or an icon too).
 */
 
@@ -59,10 +66,32 @@
   /* Motion */
   --transition-ui: 180ms ease;
 
+  /* Lime on light surfaces */
+  --accent-hover: #bef264;
+  /* Borders and indicators in lime: 3.1:1 on white (WCAG 1.4.11). */
+  --accent-strong: #65a30d;
+  /* Lime fills that must read against a grey track (progress): 4.0:1 on
+     #E5E7EB, where --accent-strong would only reach 2.5:1. */
+  --accent-deep: #4d7c0f;
+  /* Light lime panels (plan-limit notice). */
+  --accent-tint: #f7fee7;
+  --accent-tint-border: #d9f99d;
+
+  /* Status (always paired with text) */
+  --danger: #b91c1c;
+  --danger-hover: #991b1b;
+  --danger-tint: #fef2f2;
+
+  /* Elevation on light surfaces: borders first, shadows barely there. */
+  --elevation-subtle: 0 1px 2px rgba(17, 24, 39, 0.04);
+  --elevation-overlay: 0 16px 48px rgba(17, 24, 39, 0.14);
+  --overlay: rgba(17, 24, 39, 0.4);
+
+  /* Glass on light surfaces (top bar, modals) */
+  --glass-light-bg: rgba(255, 255, 255, 0.96);
+
   /* Accessibility */
   --focus-ring: #65a30d;
-  --danger: #b91c1c;
-  --danger-tint: #fef2f2;
 }
 
 /* Non-namespaced tokens, exposed to Tailwind under color utilities:
@@ -83,8 +112,19 @@
   --color-surface-dark: var(--surface-dark);
   --color-surface-dark-raised: var(--surface-dark-raised);
 
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-tint: var(--accent-tint);
+  --color-accent-tint-border: var(--accent-tint-border);
+
   --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
   --color-danger-tint: var(--danger-tint);
+  --color-overlay: var(--overlay);
+
+  --shadow-subtle: var(--elevation-subtle);
+  --shadow-overlay: var(--elevation-overlay);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
@@ -101,8 +141,17 @@ body {
   outline-offset: 3px;
 }
 
-/* Floating glass surface. Only over graphite: on a light background the
-   6% white would be invisible. */
+/* Floating glass over light surfaces (modals): frosted white. */
+.glass-surface {
+  background: var(--glass-light-bg);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--elevation-overlay);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+/* Floating glass surface over graphite: on a light background the 6% white
+   would be invisible (use .glass-surface there). */
 .glass-panel {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -128,6 +177,10 @@ body {
   .glass-panel:hover {
     background: var(--surface-dark-raised);
   }
+
+  .glass-surface {
+    background: var(--surface);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -142,5 +195,153 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Landing product preview: one task card "arrives" in its column as the
+   section scrolls into view. Driven by scrolling itself (no script, no
+   loop), skipped where scroll timelines are unsupported, and never run
+   with reduced motion. */
+@keyframes mock-arrive {
+  from {
+    opacity: 0;
+    transform: translateX(-28px) scale(0.97);
+    box-shadow: 0 0 0 0 transparent;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    box-shadow:
+      0 0 0 1px var(--accent-strong),
+      0 6px 18px color-mix(in srgb, var(--accent-strong) 18%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .mock-arrive {
+      animation: mock-arrive linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+  }
+}
+
+/* Landing mockup levitation. The mockup (.float-body) drifts up and down;
+   the ground shadow under it (.float-shadow), tinted with the brand lime, is
+   two layers trading places: a tight, strong contact glow when the mockup
+   comes down (::before) and a wide, soft one when it rises (::after). Only transform and opacity move
+   (compositor work, no layout or paint); nothing moves with reduced
+   motion. */
+.float-stage {
+  --float-lift: -32px;
+  --float-cycle: 5.5s;
+}
+
+@media (max-width: 639px) {
+  .float-stage {
+    --float-lift: -12px;
+  }
+}
+
+.float-shadow {
+  position: absolute;
+  inset: auto 6% -44px;
+  height: 64px;
+  pointer-events: none;
+}
+
+.float-shadow::before,
+.float-shadow::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* Contact shadow: close and crisp. */
+.float-shadow::before {
+  inset: 18px 10%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-accent) 55%, transparent),
+    transparent
+  );
+  filter: blur(10px);
+  opacity: 0.7;
+}
+
+/* Lift shadow: far and diffuse. */
+.float-shadow::after {
+  inset: 0 -2%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-accent) 35%, transparent),
+    transparent
+  );
+  filter: blur(26px);
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .float-body {
+    animation: float-drift var(--float-cycle) ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .float-shadow::before {
+    animation: float-contact var(--float-cycle) ease-in-out infinite;
+  }
+
+  .float-shadow::after {
+    animation: float-spread var(--float-cycle) ease-in-out infinite;
+  }
+
+  /* The dashboard card, a touch out of phase: soft parallax. */
+  .float-parallax {
+    animation: float-parallax var(--float-cycle) ease-in-out -1.4s infinite;
+  }
+}
+
+@keyframes float-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(var(--float-lift));
+  }
+}
+
+@keyframes float-contact {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(0.72, 0.6);
+  }
+}
+
+@keyframes float-spread {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.12, 1.25);
+  }
+}
+
+@keyframes float-parallax {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-24px);
   }
 }

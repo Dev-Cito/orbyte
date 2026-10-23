@@ -1,47 +1,45 @@
 import { Suspense, type ReactNode } from "react";
-import Link from "next/link";
 import { NavList, SidebarNav, type NavItem } from "./sidebar-nav";
 
 export type { NavItem };
 
-// The application frame: a solid graphite sidebar and a graphite content
-// area. No glass here: glass is for what floats above (TopNav, modals).
+// The application frame, light: a full-width top bar (topNav), then a white
+// sidebar with a hairline border next to the content, on a barely tinted
+// canvas. Mobile: the sidebar becomes a row of tabs under the top bar.
 export function AppShell({
   nav,
   topNav,
   children,
 }: {
   nav: NavItem[];
-  topNav?: ReactNode;
+  topNav: ReactNode;
   children: ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-surface-dark text-fg-inverse">
+    <div className="min-h-screen bg-background text-fg">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-3 focus:py-2 focus:text-fg-on-lime"
       >
         Skip to content
       </a>
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-white/10 bg-brand px-4 py-6 md:flex">
-        <Link href="/app" className="mb-8 flex items-center gap-2 px-2 text-lg font-semibold tracking-tight">
-          <span aria-hidden="true" className="size-6 rounded-lg bg-accent" />
-          Orbyte
-        </Link>
-        <Suspense fallback={<NavList items={nav} pathname={null} />}>
-          <SidebarNav items={nav} />
-        </Suspense>
-      </aside>
-      <div className="flex min-w-0 flex-1 flex-col">
-        {topNav}
-        <div className="px-4 pt-3 md:hidden">
-          <Suspense fallback={<NavList items={nav} pathname={null} orientation="horizontal" />}>
-            <SidebarNav items={nav} orientation="horizontal" />
+      {topNav}
+      <div className="flex">
+        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 border-r border-border bg-surface px-3 py-6 md:block">
+          <Suspense fallback={<NavList items={nav} pathname={null} />}>
+            <SidebarNav items={nav} />
           </Suspense>
+        </aside>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="border-b border-border bg-surface px-4 md:hidden">
+            <Suspense fallback={<NavList items={nav} pathname={null} orientation="horizontal" />}>
+              <SidebarNav items={nav} orientation="horizontal" />
+            </Suspense>
+          </div>
+          <main id="main" className="flex-1 px-5 py-8 sm:px-8 lg:px-12 lg:py-12">
+            {children}
+          </main>
         </div>
-        <main id="main" className="flex-1 px-6 py-8">
-          {children}
-        </main>
       </div>
     </div>
   );

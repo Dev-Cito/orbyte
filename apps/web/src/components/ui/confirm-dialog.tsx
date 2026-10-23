@@ -35,15 +35,15 @@ export function ConfirmDialog({
       description={description}
     >
       {error && (
-        <ErrorAlert tone="dark" className="mb-4">
+        <ErrorAlert className="mb-4">
           {error}
         </ErrorAlert>
       )}
       <div className="flex justify-end gap-3">
-        <Button variant="secondary" tone="dark" onClick={onCancel} disabled={pending}>
+        <Button variant="secondary" onClick={onCancel} disabled={pending}>
           Cancel
         </Button>
-        <Button variant="danger" tone="dark" onClick={onConfirm} loading={pending}>
+        <Button variant="danger" onClick={onConfirm} loading={pending}>
           {confirmLabel}
         </Button>
       </div>

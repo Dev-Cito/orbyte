@@ -28,7 +28,7 @@ export function Dashboard() {
     <div className="mx-auto flex max-w-5xl flex-col gap-6">
       <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm text-fg-inverse/60">Welcome back, {user.name}</p>
+          <p className="text-sm text-fg-muted">Welcome back, {user.name}</p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">{organization.name}</h1>
         </div>
         <PlanBadge plan={plan} />
@@ -44,9 +44,9 @@ export function Dashboard() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
         <UsageCard usage={usage} />
 
-        <Card tone="dark" className="flex flex-col gap-4">
+        <Card className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-fg-inverse/70">Recent projects</h2>
+            <h2 className="text-sm font-semibold text-fg-secondary">Recent projects</h2>
             <Link href="/app/projects" className="text-sm font-medium underline underline-offset-4">
               All projects
             </Link>
@@ -63,15 +63,15 @@ export function Dashboard() {
           )}
           {projects.status === "success" &&
             (projects.data.length === 0 ? (
-              <p className="text-sm text-fg-inverse/70">
+              <p className="text-sm text-fg-secondary">
                 No projects yet.{" "}
-                <Link href="/app/projects" className="font-medium text-fg-inverse underline underline-offset-4">
+                <Link href="/app/projects" className="font-medium text-fg underline underline-offset-4">
                   Create your first one
                 </Link>
                 .
               </p>
             ) : (
-              <ul className="flex flex-col divide-y divide-white/10">
+              <ul className="flex flex-col divide-y divide-border">
                 {[...projects.data]
                   .reverse()
                   .slice(0, RECENT)
@@ -79,10 +79,10 @@ export function Dashboard() {
                     <li key={project.id}>
                       <Link
                         href={`/app/projects/${project.id}`}
-                        className="flex items-center justify-between gap-3 rounded-lg px-2 py-2.5 text-sm hover:bg-white/5"
+                        className="flex items-center justify-between gap-3 rounded-lg px-2 py-2.5 text-sm hover:bg-surface-subtle"
                       >
                         <span className="truncate font-medium">{project.name}</span>
-                        <span className="shrink-0 text-xs text-fg-inverse/60">
+                        <span className="shrink-0 text-xs text-fg-muted">
                           {formatDate(project.createdAt)}
                         </span>
                       </Link>

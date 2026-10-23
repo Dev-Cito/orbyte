@@ -74,12 +74,12 @@ export function ProjectBoard({ projectId }: { projectId: string }) {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
-      <nav aria-label="Breadcrumb" className="text-sm text-fg-inverse/60">
-        <Link href="/app/projects" className="underline underline-offset-4 hover:text-fg-inverse">
+      <nav aria-label="Breadcrumb" className="text-sm text-fg-muted">
+        <Link href="/app/projects" className="underline underline-offset-4 hover:text-fg">
           Projects
         </Link>
         <span aria-hidden="true"> / </span>
-        <span aria-current="page" className="text-fg-inverse">
+        <span aria-current="page" className="text-fg">
           {project.status === "success" ? project.data.name : "…"}
         </span>
       </nav>
@@ -93,7 +93,7 @@ export function ProjectBoard({ projectId }: { projectId: string }) {
         ) : (
           <>
             <h1 className="text-2xl font-semibold tracking-tight break-words">{project.data.name}</h1>
-            <p className="mt-1 text-sm text-fg-inverse/60">
+            <p className="mt-1 text-sm text-fg-muted">
               Created {formatDate(project.data.createdAt)}
             </p>
           </>
@@ -102,7 +102,7 @@ export function ProjectBoard({ projectId }: { projectId: string }) {
 
       <NewTaskForm projectId={projectId} onCreated={tasks.reload} />
 
-      {actionError && <ErrorAlert tone="dark">{actionError}</ErrorAlert>}
+      {actionError && <ErrorAlert>{actionError}</ErrorAlert>}
 
       {tasks.status === "error" && <LoadError error={tasks.error} onRetry={tasks.reload} />}
       {tasks.status !== "error" && (
@@ -115,7 +115,7 @@ export function ProjectBoard({ projectId }: { projectId: string }) {
               <section
                 key={column.status}
                 aria-labelledby={`column-${column.status}`}
-                className="flex flex-col gap-3 rounded-panel border border-white/10 bg-brand p-3"
+                className="flex flex-col gap-3 rounded-panel border border-border bg-background p-3"
               >
                 <header className="flex items-center justify-between px-1">
                   <h2 id={`column-${column.status}`} className="text-sm font-semibold">
@@ -134,7 +134,7 @@ export function ProjectBoard({ projectId }: { projectId: string }) {
                     <Skeleton className="h-20" />
                   </div>
                 ) : items.length === 0 ? (
-                  <p className="rounded-xl border border-dashed border-white/10 px-3 py-6 text-center text-xs text-fg-inverse/50">
+                  <p className="rounded-xl border border-dashed border-border px-3 py-6 text-center text-xs text-fg-muted">
                     No tasks {column.status === "done" ? "done yet" : "here"}
                   </p>
                 ) : (
@@ -190,7 +190,7 @@ function NewTaskForm({ projectId, onCreated }: { projectId: string; onCreated: (
     <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
       <div className="flex-1">
         <Input
-          tone="dark"
+         
           label="New task"
           name="title"
           placeholder="What needs to be done?"
@@ -199,7 +199,7 @@ function NewTaskForm({ projectId, onCreated }: { projectId: string; onCreated: (
           error={error ?? undefined}
         />
       </div>
-      <Button type="submit" tone="dark" loading={pending}>
+      <Button type="submit" loading={pending}>
         Add task
       </Button>
     </form>
@@ -208,9 +208,9 @@ function NewTaskForm({ projectId, onCreated }: { projectId: string; onCreated: (
 
 function ProjectNotFound() {
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-3 rounded-card border border-white/10 bg-surface-dark-raised px-6 py-14 text-center">
+    <div className="mx-auto flex max-w-md flex-col items-center gap-3 rounded-card border border-border bg-surface px-6 py-14 text-center">
       <h1 className="text-xl font-semibold">Project not found</h1>
-      <p className="text-sm text-fg-inverse/70">
+      <p className="text-sm text-fg-secondary">
         It may have been deleted, or it is not part of your organization.
       </p>
       <Link href="/app/projects" className="mt-2 text-sm font-medium underline underline-offset-4">

@@ -34,8 +34,8 @@ export default function AppLayout({ children }: LayoutProps<"/app">) {
 
 function AppShellLoading() {
   return (
-    <AppShell nav={NAV}>
-      <p role="status" className="text-sm text-fg-inverse/70">
+    <AppShell nav={NAV} topNav={<TopNav />}>
+      <p role="status" className="text-sm text-fg-secondary">
         Loading your workspace…
       </p>
     </AppShell>

@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-// A glass dialog (it floats). Built on the native <dialog> + showModal():
+// A frosted-white dialog (it floats over the light app). Built on the native <dialog> + showModal():
 // focus is trapped inside, Escape closes it, the page behind is inert, and
 // focus returns to the opener on close.
 export function Modal({
@@ -52,8 +52,8 @@ export function Modal({
         if (dismissible && event.target === event.currentTarget) onClose();
       }}
       className={cn(
-        "glass-panel m-auto w-[calc(100%-2rem)] max-w-md rounded-panel p-6 text-fg-inverse",
-        "backdrop:bg-black/60",
+        "glass-surface m-auto w-[calc(100%-2rem)] max-w-md rounded-panel p-6 text-fg",
+        "backdrop:bg-overlay",
         className,
       )}
     >
@@ -61,7 +61,7 @@ export function Modal({
         {title}
       </h2>
       {description && (
-        <div id={descriptionId} className="mt-1 text-sm text-fg-inverse/70">
+        <div id={descriptionId} className="mt-1 text-sm text-fg-secondary">
           {description}
         </div>
       )}

@@ -22,12 +22,13 @@ export function ProgressBar({
       aria-valuemin={0}
       aria-valuemax={max}
       aria-valuenow={Math.min(value, max)}
-      className="h-2 w-full overflow-hidden rounded-full bg-white/10"
+      className="h-2 w-full overflow-hidden rounded-full bg-border"
     >
       <div
         className={cn(
           "h-full rounded-full transition-[width] duration-[180ms]",
-          emphasis ? "bg-[#fbbf24]" : "bg-fg-inverse/70",
+          // Both fills stay above 3:1 against the track (WCAG 1.4.11).
+          emphasis ? "bg-accent-deep" : "bg-brand",
         )}
         style={{ width: `${percent}%` }}
       />

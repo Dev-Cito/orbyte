@@ -63,7 +63,7 @@ export function ProjectsView() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>
           {projects.status === "success" && (
-            <p className="mt-1 text-sm text-fg-inverse/60">
+            <p className="mt-1 text-sm text-fg-muted">
               {projects.data.length} {projects.data.length === 1 ? "project" : "projects"}
               {usage.status === "success" && usage.data.limits.maxProjects !== null
                 ? ` of ${usage.data.limits.maxProjects} on your plan`
@@ -74,7 +74,7 @@ export function ProjectsView() {
         <div className="flex flex-col items-start gap-1.5 sm:items-end">
           {/* At the limit it drops the lime: Upgrade is the action then. */}
           <Button
-            tone="dark"
+           
             variant={atLimit ? "secondary" : "primary"}
             onClick={() => setCreating(true)}
             disabled={atLimit}
@@ -83,7 +83,7 @@ export function ProjectsView() {
             New project
           </Button>
           {atLimit && (
-            <p id="new-project-hint" className="text-xs text-fg-inverse/70">
+            <p id="new-project-hint" className="text-xs text-fg-secondary">
               Upgrade to add more projects.
             </p>
           )}
@@ -109,9 +109,9 @@ export function ProjectsView() {
       {projects.status === "error" && <LoadError error={projects.error} onRetry={projects.reload} />}
       {projects.status === "success" &&
         (projects.data.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 rounded-card border border-dashed border-white/15 px-6 py-16 text-center">
+          <div className="flex flex-col items-center gap-2 rounded-card border border-dashed border-border px-6 py-16 text-center">
             <p className="text-base font-semibold">No projects yet — create your first one</p>
-            <p className="text-sm text-fg-inverse/60">
+            <p className="text-sm text-fg-muted">
               Projects hold your team&apos;s tasks, from to-do to done.
             </p>
           </div>
@@ -136,7 +136,7 @@ export function ProjectsView() {
         title="Delete this project?"
         description={
           <>
-            <strong className="text-fg-inverse">{toDelete?.name}</strong> and all of its tasks will be
+            <strong className="text-fg">{toDelete?.name}</strong> and all of its tasks will be
             permanently deleted.
           </>
         }

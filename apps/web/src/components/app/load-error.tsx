@@ -8,10 +8,10 @@ import { errorMessage } from "@/lib/error-message";
 export function LoadError({ error, onRetry }: { error: unknown; onRetry: () => void }) {
   return (
     <div className="flex flex-col items-start gap-3">
-      <ErrorAlert tone="dark" className="w-full">
+      <ErrorAlert className="w-full">
         {errorMessage(error)}
       </ErrorAlert>
-      <Button variant="secondary" tone="dark" size="sm" onClick={onRetry}>
+      <Button variant="secondary" size="sm" onClick={onRetry}>
         Try again
       </Button>
     </div>

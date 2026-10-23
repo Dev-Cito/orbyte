@@ -36,7 +36,8 @@ export function Eyebrow({ children, tone = "light" }: { children: ReactNode; ton
     <p
       className={cn(
         "text-sm font-semibold uppercase tracking-[0.12em]",
-        tone === "light" ? "text-fg-muted" : "text-fg-inverse/60",
+        // Secondary, not muted: muted grey is 4.39:1 on the subtle band.
+        tone === "light" ? "text-fg-secondary" : "text-fg-inverse/60",
       )}
     >
       {children}
